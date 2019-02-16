@@ -4,29 +4,58 @@ using UnityEngine;
 
 public class MovingRobot : MonoBehaviour
 {
+    [Header("Fake with controller")]
     public float speed = 1;
     public float angle = 90;
     // Start is called before the first frame update
-    void Start()
+
+    [Header("Angluar input wheel")]
+    public float leftWheel;
+    public float rightWheel;
+
+    public float rayon = 0.1f;
+
+    public void SetAngluareRotationLeft(float angle)
     {
-        
+        leftWheel = angle;
+    }
+    public void SetAngluareRotationRight(float angle)
+    {
+        rightWheel = angle;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            this.transform.Translate(new Vector3(0, 0, speed) * Time.deltaTime, Space.Self);
-        }
-        if(Input.GetKey(KeyCode.LeftArrow))
-        {
-            TurnRobot(angle);
-        }
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            TurnRobot(-angle);
-        }
+
+
+        MoveForward(speed * Input.GetAxis("Vertical"));
+        TurnRobot(angle * Input.GetAxis("Horizontal"));
+
+        float fakeRotation = leftWheel + -rightWheel;
+        float fakeAngluareMove = leftWheel + rightWheel;
+
+            
+        MoveForward( ( Mathf.Deg2Rad*fakeAngluareMove) *rayon * Mathf.PI*2);
+        TurnRobot(fakeRotation);
+
+        //if (Input.GetKey(KeyCode.UpArrow))
+        //{
+        //    MoveForward(speed);
+        //}
+        //if (Input.GetKey(KeyCode.LeftArrow))
+        //{
+        //    TurnRobot(angle);
+        //}
+        //if (Input.GetKey(KeyCode.RightArrow))
+        //{
+        //    TurnRobot(-angle);
+        //}
+    }
+
+    private void MoveForward(float speed )
+    {
+        this.transform.Translate(new Vector3(0, 0, speed) * Time.deltaTime, Space.Self);
     }
 
     public void TurnRobot(float angle)
